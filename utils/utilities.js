@@ -8,4 +8,19 @@ const replaceNumberInUrl = (data) => {
   return replacedUrlsData;
 };
 
-module.exports = { replaceNumberInUrl };
+const pickTwoRandomCats = (data) => {
+  if (data.length < 2) {
+    throw new Error("The array must contain at least two objects.");
+  }
+
+  const generateRandomIndex = (arr) => {
+    return Math.floor(Math.random() * arr.length);
+  };
+
+  let index1 = generateRandomIndex(data);
+  let index2 = generateRandomIndex(data);
+
+  return [data[index1], data[index2]];
+};
+
+module.exports = { replaceNumberInUrl, pickTwoRandomCats };

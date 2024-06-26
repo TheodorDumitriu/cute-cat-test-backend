@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const Kitty = require("../models/Kitty");
 
-const { replaceNumberInUrl } = require("../utils/utilities");
+const { replaceNumberInUrl, pickTwoRandomCats } = require("../utils/utilities");
 
 // GET listing of all cute cats and cleaning the URL to access the image directly
 const cuteCats = async (req, res) => {
@@ -69,8 +69,13 @@ const lovedKitties = async (req, res) => {
 // Get Two random cats from the DB
 const getTwoRandomCats = async (req, res) => {
   try {
-    console.log("getTwoRandomCats");
-    return res.status(200).json({ message: "getTwoRandomCats" });
+    const { data } = await axios.get("https://data.latelier.co/cats.json");
+
+    const cleanCuteCatImgsArray = replaceNumberInUrl(data.images);
+
+    const twoCats = pickTwoRandomCats(cleanCuteCatImgsArray);
+
+    return res.status(200).json({ data: twoCats });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
