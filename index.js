@@ -7,6 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const catRoutes = require("./routes/routes");
+
 app.get("/", (req, res) => {
   try {
     console.log("Welcome to the cuteness overload server 🐱");
@@ -17,6 +19,8 @@ app.get("/", (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
+
+app.use(catRoutes);
 
 app.all("*", (req, res) => {
   res.status(404).json({ message: "This route does not exist" });
