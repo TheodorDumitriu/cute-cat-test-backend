@@ -2,6 +2,7 @@ const axios = require("axios");
 
 const Kitty = require("../models/Kitty");
 
+// GET listing of all cute cats and cleaning the URL to access the image directly
 const cuteCats = async (req, res) => {
   try {
     const { data } = await axios.get("https://data.latelier.co/cats.json");
@@ -19,6 +20,7 @@ const cuteCats = async (req, res) => {
   }
 };
 
+// POST a cat in the DB and increment the love score if the cat already exists
 const postCuteCat = async (req, res) => {
   try {
     const { kittyUrl, id } = req.body;
@@ -49,4 +51,22 @@ const postCuteCat = async (req, res) => {
   }
 };
 
-module.exports = { cuteCats, postCuteCat };
+// GET all the LIKED cats in the DB and sort them by loveScore
+const lovedKitties = async (req, res) => {
+  try {
+    const lovedKittiesArray = await Kitty.find().sort({ loveScore: -1 });
+
+    // Use in front if not cat has been loved yet
+    if (lovedKittiesArray.length === 0) {
+      return res.status(404).json({ message: "No kitty has been loved yet" });
+    }
+
+    return res.status(201).json({
+      data: lovedKittiesArray,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { cuteCats, postCuteCat, lovedKitties };
